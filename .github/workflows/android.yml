@@ -11,9 +11,6 @@ on:
 jobs:
   android-build-and-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./android
 
     strategy:
       matrix:
