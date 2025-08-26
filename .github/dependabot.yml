@@ -6,7 +6,7 @@ updates:
 
   # Android Dependencies (Gradle)
   - package-ecosystem: "gradle"
-    directory: "/android"
+    directory: "/"
     schedule:
       interval: "daily"
     reviewers:
