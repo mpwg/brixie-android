@@ -2,6 +2,7 @@ package eu.mpwg.android.rebrickable.api
 
 import eu.mpwg.android.rebrickable.config.RebrickableApiConfiguration
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -46,6 +47,16 @@ class LegoApiUnitTest {
             legoApi = apiClient.legoApi
         } catch (e: Exception) {
             fail("Failed to setup API client: ${e.message}")
+        }
+    }
+    
+    @After
+    fun tearDown() {
+        // Reset configuration after each test
+        try {
+            RebrickableApiConfiguration.reset()
+        } catch (e: Exception) {
+            // Ignore reset errors in test cleanup
         }
     }
     
