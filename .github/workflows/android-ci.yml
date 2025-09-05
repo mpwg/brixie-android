@@ -1,0 +1,87 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-build-${{ github.ref }}
+  cancel-in-progress: true
+
+# Limit default token permissions for security
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # avoid exposing GITHUB_TOKEN to third-party actions by default
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/*.gradle*','**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Ensure gradlew is executable
+        run: chmod +x ./gradlew
+
+      - name: Run Gradle build (assemble, tests)
+        # --no-daemon speeds CI; using wrapper ensures consistent Gradle version
+        run: ./gradlew --no-daemon build
+
+      - name: Upload build reports (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-reports
+          path: |
+            app/build/reports
+            build/reports
+
+  lint:
+    name: Lint (quick)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Run Android lint
+        run: ./gradlew --no-daemon lint
+
+# Security notes:
+# - GITHUB_TOKEN perms are restricted above to the minimum needed (read contents, write checks/pull-requests).
+# - persist-credentials: false prevents checkout from automatically exposing the token to later steps or 3rd-party actions.
+# - Avoid echoing secrets or writing tokens to logs. If you need to use additional secrets, store them in repository secrets and reference
+#   them explicitly in a step with `env:`.
