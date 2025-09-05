@@ -5,11 +5,51 @@ import java.net.MalformedURLException
 import java.net.URL
 
 /**
+ * Logger interface to allow testing without Android dependencies
+ */
+interface Logger {
+    fun d(tag: String, message: String): Unit
+    fun i(tag: String, message: String): Unit
+    fun w(tag: String, message: String): Unit
+    fun e(tag: String, message: String, throwable: Throwable? = null): Unit
+}
+
+/**
+ * Android Log implementation
+ */
+internal class AndroidLogger : Logger {
+    override fun d(tag: String, message: String): Unit { Log.d(tag, message) }
+    override fun i(tag: String, message: String): Unit { Log.i(tag, message) }
+    override fun w(tag: String, message: String): Unit { Log.w(tag, message) }
+    override fun e(tag: String, message: String, throwable: Throwable?): Unit {
+        if (throwable != null) {
+            Log.e(tag, message, throwable)
+        } else {
+            Log.e(tag, message)
+        }
+    }
+}
+
+/**
+ * Test-friendly logger that uses println
+ */
+internal class TestLogger : Logger {
+    override fun d(tag: String, message: String): Unit { println("D/$tag: $message") }
+    override fun i(tag: String, message: String): Unit { println("I/$tag: $message") }
+    override fun w(tag: String, message: String): Unit { println("W/$tag: $message") }
+    override fun e(tag: String, message: String, throwable: Throwable?): Unit {
+        println("E/$tag: $message")
+        throwable?.printStackTrace()
+    }
+}
+
+/**
  * Configuration for the Rebrickable API client with extensive error handling
  */
 class RebrickableApiConfiguration private constructor(
     val apiKey: String,
-    val basePath: String = DEFAULT_BASE_PATH
+    val basePath: String = DEFAULT_BASE_PATH,
+    private val logger: Logger = AndroidLogger()
 ) {
     
     init {
@@ -29,7 +69,7 @@ class RebrickableApiConfiguration private constructor(
         if (apiKey.equals("dummy-api-key", ignoreCase = true) || 
             apiKey.equals("test", ignoreCase = true) || 
             apiKey.equals("placeholder", ignoreCase = true)) {
-            Log.w(TAG, "Warnung: Es wird ein Test/Dummy-API-Schlüssel verwendet")
+            logger.w(TAG, "Warnung: Es wird ein Test/Dummy-API-Schlüssel verwendet")
         }
         
         // Validate base path
@@ -40,13 +80,13 @@ class RebrickableApiConfiguration private constructor(
         try {
             val url = URL(basePath)
             if (!url.protocol.equals("https", ignoreCase = true)) {
-                Log.w(TAG, "Warnung: Unsichere HTTP-Verbindung wird verwendet statt HTTPS")
+                logger.w(TAG, "Warnung: Unsichere HTTP-Verbindung wird verwendet statt HTTPS")
             }
         } catch (e: MalformedURLException) {
             throw IllegalArgumentException("Ungültige Basis-URL: $basePath", e)
         }
         
-        Log.d(TAG, "API-Konfiguration validiert: Basis-URL=$basePath, API-Schlüssel-Länge=${apiKey.length}")
+        logger.d(TAG, "API-Konfiguration validiert: Basis-URL=$basePath, API-Schlüssel-Länge=${apiKey.length}")
     }
     
     companion object {
@@ -54,20 +94,17 @@ class RebrickableApiConfiguration private constructor(
         private const val DEFAULT_BASE_PATH = "https://rebrickable.com"
         
         @JvmStatic
-        private lateinit var _shared: RebrickableApiConfiguration
+        private var _shared: RebrickableApiConfiguration? = null
         
         @JvmStatic
         val shared: RebrickableApiConfiguration
             get() {
-                if (!::_shared.isInitialized) {
-                    throw IllegalStateException("API-Konfiguration wurde noch nicht initialisiert. Rufen Sie initialize() zuerst auf.")
-                }
-                return _shared
+                return _shared ?: throw IllegalStateException("API-Konfiguration wurde noch nicht initialisiert. Rufen Sie initialize() zuerst auf.")
             }
         
         @JvmStatic
         val isInitialized: Boolean
-            get() = ::_shared.isInitialized
+            get() = _shared != null
         
         /**
          * Initialize the shared configuration with an API key
@@ -77,20 +114,20 @@ class RebrickableApiConfiguration private constructor(
          * @throws IllegalStateException if already initialized
          */
         @JvmStatic
-        fun initialize(apiKey: String, basePath: String = DEFAULT_BASE_PATH) {
+        fun initialize(apiKey: String, basePath: String = DEFAULT_BASE_PATH, logger: Logger = AndroidLogger()) {
             try {
-                Log.d(TAG, "Initializing Rebrickable API configuration...")
+                logger.d(TAG, "Initializing Rebrickable API configuration...")
                 
-                if (::_shared.isInitialized) {
+                if (_shared != null) {
                     throw IllegalStateException("API-Konfiguration wurde bereits initialisiert")
                 }
                 
-                _shared = RebrickableApiConfiguration(apiKey, basePath)
+                _shared = RebrickableApiConfiguration(apiKey, basePath, logger)
                 
-                Log.i(TAG, "Rebrickable API configuration initialized successfully")
+                logger.i(TAG, "Rebrickable API configuration initialized successfully")
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize API configuration", e)
+                logger.e(TAG, "Failed to initialize API configuration", e)
                 throw RuntimeException("Fehler beim Initialisieren der API-Konfiguration", e)
             }
         }
@@ -103,17 +140,17 @@ class RebrickableApiConfiguration private constructor(
          * @throws IllegalArgumentException if parameters are invalid
          */
         @JvmStatic
-        fun create(apiKey: String, basePath: String = DEFAULT_BASE_PATH): RebrickableApiConfiguration {
+        fun create(apiKey: String, basePath: String = DEFAULT_BASE_PATH, logger: Logger = TestLogger()): RebrickableApiConfiguration {
             try {
-                Log.d(TAG, "Creating new API configuration instance...")
+                logger.d(TAG, "Creating new API configuration instance...")
                 
-                val config = RebrickableApiConfiguration(apiKey, basePath)
+                val config = RebrickableApiConfiguration(apiKey, basePath, logger)
                 
-                Log.d(TAG, "API configuration instance created successfully")
+                logger.d(TAG, "API configuration instance created successfully")
                 return config
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to create API configuration", e)
+                logger.e(TAG, "Failed to create API configuration", e)
                 throw RuntimeException("Fehler beim Erstellen der API-Konfiguration", e)
             }
         }
@@ -124,11 +161,9 @@ class RebrickableApiConfiguration private constructor(
          */
         @JvmStatic
         internal fun reset() {
-            Log.d(TAG, "Resetting API configuration")
-            if (::_shared.isInitialized) {
-                // Clear the lateinit reference by reflection if needed for testing
-                // This is primarily for testing scenarios
-            }
+            val logger = TestLogger()
+            logger.d(TAG, "Resetting API configuration")
+            _shared = null
         }
     }
 }
