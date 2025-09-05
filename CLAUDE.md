@@ -4,7 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Brixie is an Android application that integrates with the Rebrickable API to provide LEGO-related functionality. The app is built using Kotlin and follows Android development best practices with a clean architecture pattern.
+Brixie is a modern Android application that integrates with the Rebrickable API to provide comprehensive LEGO set browsing and searching functionality. The app features a cool, elegant Material 3 design optimized for both phones and tablets, with German localization.
+
+### Core Features
+- **Categories List**: Browse all LEGO categories
+- **Sets List**: View and filter LEGO sets
+- **Search Mode**: Advanced search functionality for sets
+- **Detailed Set View**: Complete set information with cached images
+- **Image Caching**: Efficient download and caching of set images
+- **Responsive Design**: Optimized for phones and tablets
+- **German UI**: Full German localization
+
+### Design Philosophy
+- Material 3 design system with Material You theming
+- Modern, cool, and elegant user interface
+- Responsive layouts for various screen sizes
+- Performance-optimized with efficient caching
 
 ## Key Architecture Components
 
