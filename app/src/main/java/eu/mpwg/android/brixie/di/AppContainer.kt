@@ -65,7 +65,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
                 DATABASE_NAME
             )
             .addCallback(databaseCallback)
-            .fallbackToDestructiveMigration() // For development - remove in production
+            .fallbackToDestructiveMigration(dropAllTables = true) // For development - remove in production
             .build()
             
             Log.d(TAG, "Database initialized successfully")
