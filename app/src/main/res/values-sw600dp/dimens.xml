@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tablet-optimized dimensions -->
+    <dimen name="activity_horizontal_margin">24dp</dimen>
+    <dimen name="activity_vertical_margin">24dp</dimen>
+    
+    <!-- Card spacing for tablets -->
+    <dimen name="card_margin_horizontal">12dp</dimen>
+    <dimen name="card_margin_vertical">6dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+    
+    <!-- Content padding for tablets -->
+    <dimen name="content_padding">24dp</dimen>
+    <dimen name="content_padding_small">12dp</dimen>
+    <dimen name="content_padding_large">32dp</dimen>
+    
+    <!-- Set image sizes for tablets -->
+    <dimen name="set_image_small">120dp</dimen>
+    <dimen name="set_image_medium">180dp</dimen>
+    <dimen name="set_image_large">300dp</dimen>
+    
+    <!-- Grid columns for tablets -->
+    <integer name="grid_columns">2</integer>
+</resources>

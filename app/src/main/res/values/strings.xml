@@ -1,6 +1,35 @@
 <resources>
     <string name="app_name">Brixie</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Kategorien</string>
+    <string name="title_dashboard">Sets</string>
+    <string name="title_notifications">Favoriten</string>
+    
+    <!-- Theme strings -->
+    <string name="theme_icon">Thema Symbol</string>
+    <string name="navigate_to_theme">Zum Thema navigieren</string>
+    <string name="loading">Laden…</string>
+    <string name="error_loading_themes">Fehler beim Laden der Themen</string>
+    <string name="retry">Erneut versuchen</string>
+    <string name="refresh">Aktualisieren</string>
+    
+    <!-- Set strings -->
+    <string name="set_parts">%d Teile</string>
+    <string name="set_year">Jahr %d</string>
+    <string name="error_loading_sets">Fehler beim Laden der Sets</string>
+    <string name="no_sets_found">Keine Sets gefunden</string>
+    
+    <!-- Search strings -->
+    <string name="search_hint">Sets suchen…</string>
+    <string name="search_no_results">Keine Suchergebnisse</string>
+    
+    <!-- General strings -->
+    <string name="unknown">Unbekannt</string>
+    <string name="favorite">Favorit</string>
+    <string name="remove_favorite">Favorit entfernen</string>
+    <string name="add_favorite">Zu Favoriten hinzufügen</string>
+    <string name="set_image">Set Bild</string>
+    <string name="no_favorites">Keine Favoriten</string>
+    <string name="no_favorites_description">Markiere Sets als Favoriten, um sie hier zu sehen</string>
+    <string name="share">Teilen</string>
+    <string name="set_details">Set Details</string>
 </resources>
