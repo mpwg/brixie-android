@@ -1,16 +1,38 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Brixie" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+    <!-- Base application theme with Material 3 colors -->
+    <style name="Theme.Brixie" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color (LEGO Brick Red inspired) -->
+        <item name="colorPrimary">@color/lego_red</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimaryContainer">@color/lego_red_light</item>
+        <item name="colorOnPrimaryContainer">@color/lego_red_dark</item>
+        
+        <!-- Secondary brand color (LEGO Blue inspired) -->
+        <item name="colorSecondary">@color/lego_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/lego_blue_light</item>
+        <item name="colorOnSecondaryContainer">@color/lego_blue_dark</item>
+        
+        <!-- Tertiary brand color (LEGO Yellow inspired) -->
+        <item name="colorTertiary">@color/lego_yellow</item>
+        <item name="colorOnTertiary">@color/black</item>
+        <item name="colorTertiaryContainer">@color/lego_yellow_light</item>
+        <item name="colorOnTertiaryContainer">@color/lego_yellow_dark</item>
+        
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/surface_light</item>
+        <item name="colorOnSurface">@color/on_surface_light</item>
+        <item name="colorSurfaceVariant">@color/surface_variant_light</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant_light</item>
+        
+        <!-- Status and navigation bars -->
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o">true</item>
+        
+        <!-- Enable edge-to-edge -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
     </style>
 </resources>

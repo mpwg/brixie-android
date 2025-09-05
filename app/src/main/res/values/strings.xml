@@ -27,4 +27,9 @@
     <string name="favorite">Favorit</string>
     <string name="remove_favorite">Favorit entfernen</string>
     <string name="add_favorite">Zu Favoriten hinzufügen</string>
+    <string name="set_image">Set Bild</string>
+    <string name="no_favorites">Keine Favoriten</string>
+    <string name="no_favorites_description">Markiere Sets als Favoriten, um sie hier zu sehen</string>
+    <string name="share">Teilen</string>
+    <string name="set_details">Set Details</string>
 </resources>
