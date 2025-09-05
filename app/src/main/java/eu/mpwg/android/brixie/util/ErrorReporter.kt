@@ -39,7 +39,13 @@ object ErrorReporter {
             try {
                 if (context != null) {
                     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-                    appendLine("App Version: ${packageInfo.versionName} (${packageInfo.longVersionCode})")
+                    val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        packageInfo.longVersionCode
+                    } else {
+                        @Suppress("DEPRECATION")
+                        packageInfo.versionCode.toLong()
+                    }
+                    appendLine("App Version: ${packageInfo.versionName} ($versionCode)")
                     appendLine("Paket Name: ${context.packageName}")
                 } else {
                     appendLine("App Version: Unbekannt (Kontext nicht verfügbar)")
